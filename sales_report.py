@@ -206,4 +206,6 @@ def main():
             print("Неверная команда")
 
 
-main()
+
+if __name__ == "__main__":
+    main()
