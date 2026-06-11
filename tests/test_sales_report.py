@@ -10,6 +10,24 @@ from sales_report import (
 )
 
 
+@pytest.fixture
+def sample_sales():
+    return [
+        {"product": "хлеб", "price": 100, "quantity": 2},
+        {"product": "молоко", "price": 50, "quantity": 3},
+        {"product": "вода", "price": 10, "quantity": 5},
+    ]
+
+
+@pytest.fixture
+def repeated_product_sales():
+    return [
+        {"product": "хлеб", "price": 100, "quantity": 2},
+        {"product": "молоко", "price": 50, "quantity": 3},
+        {"product": "хлеб", "price": 100, "quantity": 1},
+    ]
+
+
 @pytest.mark.parametrize("price, quantity, expected", [
     (100, 2, 200),
     (50, 3, 150),
@@ -25,33 +43,15 @@ def test_calculate_revenue(price, quantity, expected):
     assert calculate_revenue(sale) == expected
 
 
-def test_calculate_total_revenue():
-    sales = [
-        {"product": "хлеб", "price": 100, "quantity": 2},
-        {"product": "молоко", "price": 50, "quantity": 3},
-        {"product": "вода", "price": 10, "quantity": 5},
-    ]
-
-    assert calculate_total_revenue(sales) == 400
+def test_calculate_total_revenue(sample_sales):
+    assert calculate_total_revenue(sample_sales) == 400
 
 
-def test_calculate_total_quantity():
-    sales = [
-        {"product": "хлеб", "price": 100, "quantity": 2},
-        {"product": "молоко", "price": 50, "quantity": 3},
-        {"product": "вода", "price": 10, "quantity": 5},
-    ]
-
-    assert calculate_total_quantity(sales) == 10
+def test_calculate_total_quantity(sample_sales):
+    assert calculate_total_quantity(sample_sales) == 10
 
 
-def test_build_product_report():
-    sales = [
-        {"product": "хлеб", "price": 100, "quantity": 2},
-        {"product": "молоко", "price": 50, "quantity": 3},
-        {"product": "хлеб", "price": 100, "quantity": 1},
-    ]
-
+def test_build_product_report(repeated_product_sales):
     expected = {
         "хлеб": {
             "quantity": 3,
@@ -63,7 +63,7 @@ def test_build_product_report():
         }
     }
 
-    assert build_product_report(sales) == expected
+    assert build_product_report(repeated_product_sales) == expected
 
 
 def test_calculate_total_revenue_empty_list():
@@ -75,7 +75,6 @@ def test_calculate_total_quantity_empty_list():
 
 
 def test_build_product_report_empty_list():
-    assert build_product_report([]) == {}
     assert build_product_report([]) == {}
 
 
