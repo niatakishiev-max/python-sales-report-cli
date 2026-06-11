@@ -56,6 +56,8 @@ python sales_report.py
 python -m pytest
 ```
 
+Подробнее о тестовых сценариях: [TESTING.md](TESTING.md).
+
 ## Используемые технологии
 
 - Python
