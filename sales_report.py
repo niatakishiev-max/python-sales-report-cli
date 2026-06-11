@@ -23,6 +23,47 @@ def save_sales():
 sales = load_sales()
 
 
+def calculate_revenue(sale):
+    return sale["price"] * sale["quantity"]
+
+
+def calculate_total_revenue(sales_list):
+    total = 0
+
+    for sale in sales_list:
+        total += calculate_revenue(sale)
+
+    return total
+
+
+def calculate_total_quantity(sales_list):
+    total_quantity = 0
+
+    for sale in sales_list:
+        total_quantity += sale["quantity"]
+
+    return total_quantity
+
+
+def build_product_report(sales_list):
+    report = {}
+
+    for sale in sales_list:
+        product = sale["product"]
+        revenue = calculate_revenue(sale)
+
+        if product not in report:
+            report[product] = {
+                "quantity": 0,
+                "revenue": 0
+            }
+
+        report[product]["quantity"] += sale["quantity"]
+        report[product]["revenue"] += revenue
+
+    return report
+
+
 def add_sale():
     product = input("Товар: ").strip()
 
@@ -86,7 +127,7 @@ def show_sales():
         print("Продаж пока нет")
     else:
         for sale in sales:
-            revenue = sale["price"] * sale["quantity"]
+            revenue = calculate_revenue(sale)
 
             print(
                 sale["product"],
@@ -120,38 +161,19 @@ def delete_sale():
 
 
 def show_total_revenue():
-    total = 0
-
-    for sale in sales:
-        total += sale["price"] * sale["quantity"]
+    total = calculate_total_revenue(sales)
 
     print("Общая выручка:", total)
 
 
 def show_total_quantity():
-    total_quantity = 0
-
-    for sale in sales:
-        total_quantity += sale["quantity"]
+    total_quantity = calculate_total_quantity(sales)
 
     print("Всего продано товаров:", total_quantity)
 
 
 def show_product_report():
-    report = {}
-
-    for sale in sales:
-        product = sale["product"]
-        revenue = sale["price"] * sale["quantity"]
-
-        if product not in report:
-            report[product] = {
-                "quantity": 0,
-                "revenue": 0
-            }
-
-        report[product]["quantity"] += sale["quantity"]
-        report[product]["revenue"] += revenue
+    report = build_product_report(sales)
 
     if len(report) == 0:
         print("Продаж пока нет")
@@ -204,7 +226,6 @@ def main():
 
         else:
             print("Неверная команда")
-
 
 
 if __name__ == "__main__":
